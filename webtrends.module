@@ -21,7 +21,7 @@ function webtrends_menu() {
 /**
  * Implementation of hook_footer().
  */
-function webtrends_footer() {
+function webtrends_page_alter(&$page) {
   $domain = variable_get('webtrends_domain', FALSE);
   $dcs_id = variable_get('webtrends_dcs_id', FALSE);
 
@@ -36,13 +36,6 @@ _tag.fpcdom = ".$domain";
 _tag.dcsid = "$dcs_id";
 _tag.dcsGetId();
 
-_tag.dcsCustom=function(){
-  if (typeof Drupal.settings.tingSearch != 'undefined') {
-    _tag.WT.oss = encodeURIComponent(Drupal.settings.tingSearch.keys);
-    // The result count is unknown when the page is loaded, so we just say 1.
-    _tag.WT.oss_r = 1;
-  }
-}
 _tag.dcsCollect();
 EOT;
 
@@ -54,8 +47,11 @@ EOT;
 
   // We're relying on Drupal inserting inline js after references to
   // external files.
-  drupal_add_js($script, 'inline', 'footer');
-  drupal_add_js(drupal_get_path('module', 'webtrends') . '/webtrends.js', 'module', 'footer');
+  drupal_add_js(drupal_get_path('module', 'webtrends') . '/webtrends.js', array('scope' => 'footer'));
+  drupal_add_js($script, array('type' => 'inline', 'scope' => 'footer'));
 
-  return $html;
+  $page['page_bottom']['webtrends_script'] = array(
+    '#markup' => $html,
+    '#weight' => 1000,
+  );
 }
