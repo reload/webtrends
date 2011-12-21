@@ -6,7 +6,7 @@
 function webtrends_menu() {
   $items = array();
 
-  $items['admin/settings/webtrends'] = array(
+  $items['admin/config/system/webtrends'] = array(
     'title' => 'WebTrends',
     'description' => 'Settings for the WebTrends analytics tool.',
     'page callback' => 'drupal_get_form',
